@@ -15,10 +15,13 @@ def make_img(mon, type, pal):
     # exception handling
     for exception in mon_exceptions:
         if mon.find(exception) > -1:
+            # use standard palette for formes
             filepath_pal = dir + exception + f'/{pal}.pal'
-    if mon == 'gyarados': # hardcoded for red & normal gyarados forms
+    if mon == 'gyarados':
+        # special case, see below
         return
     elif mon.find('gyarados') > -1 and type == 'back':
+        # hardcoded backsprite for red & normal gyarados
         filepath_sprite = dir + 'gyarados/back.png'
     elif mon == 'ninetales_alolan' or mon == 'vulpix_alolan':
         if type == 'back':
@@ -48,10 +51,10 @@ def make_img(mon, type, pal):
     palette = [value for color in palette for value in color]
     # build sprite
     if os.path.exists(filepath_sprite):
-        back = Image.open(filepath_sprite)
-        back = back.convert('P')
-        back.putpalette(palette)
-        back.save(f'sprites/{type}{'-shiny' if pal == 'shiny' else ''}/{mon}.png')
+        sprite = Image.open(filepath_sprite)
+        sprite = sprite.convert('P')
+        sprite.putpalette(palette)
+        sprite.save(f'sprites/{type}{'-shiny' if pal == 'shiny' else ''}/{mon}.png')
 # main
 if len(sys.argv) < 2:
 	print('Point to gfx/pokemon dir')
