@@ -5,8 +5,8 @@ dir = ''
 mons = []
 mon_exceptions = ['unown', 'magikarp', 'arbok', 'pikachu', 'pichu', 'dudunsparce']
 
-def make_img(mon):
-    filepath_pal = dir + mon + '/normal.pal'
+def make_img(mon, mode):
+    filepath_pal = dir + mon + f'/{mode}.pal'
     filepath_front = dir + mon + '/front.png'
     filepath_back = dir + mon + '/back.png'
     # exception handling
@@ -18,7 +18,7 @@ def make_img(mon):
     elif mon.find('gyarados') > -1:
         filepath_back = dir + 'gyarados/back.png'
     if not os.path.exists(filepath_pal):
-        print(f'No palette for {mon}, skipping')
+        print(f'No {mode} palette for {mon}, skipping')
         return
     # read palette data from normal.pal
     palette = [
@@ -45,12 +45,12 @@ def make_img(mon):
         back = Image.open(filepath_back)
         back = back.convert('P')
         back.putpalette(palette)
-        back.save(f'sprites/back/{mon}.png')
+        back.save(f'sprites/back{'-shiny' if mode == 'shiny' else ''}/{mon}.png')
     if os.path.exists(filepath_front):
         front = Image.open(filepath_front)
         front = front.convert('P')
         front.putpalette(palette)
-        front.save(f'sprites/front/{mon}.png')
+        front.save(f'sprites/front{'-shiny' if mode == 'shiny' else ''}/{mon}.png')
 # main
 if len(sys.argv) < 2:
 	print('Point to gfx/pokemon dir')
@@ -60,6 +60,9 @@ mons = next(os.walk(dir))[1]
 if not os.path.isdir('sprites'):
     os.mkdir('sprites')
     os.mkdir('sprites/front')
+    os.mkdir('sprites/front-shiny')
     os.mkdir('sprites/back')
+    os.mkdir('sprites/back-shiny')
 for mon in mons:
-    make_img(mon)
+    make_img(mon, 'normal')
+    make_img(mon, 'shiny')
