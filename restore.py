@@ -3,6 +3,7 @@ from PIL import Image
 
 dir = ''
 mons = []
+crop = False
 mon_exceptions = ['unown', 'magikarp', 'arbok', 'pikachu', 'pichu', 'dudunsparce']
 
 def make_img(mon, type, pal):
@@ -54,11 +55,17 @@ def make_img(mon, type, pal):
         sprite = Image.open(filepath_sprite)
         sprite = sprite.convert('P')
         sprite.putpalette(palette)
+        if crop and 'front' in type:
+            width, height = sprite.size
+            sprite = sprite.crop((0, 0, width, height / (height / width)))
         sprite.save(f'sprites/{type}{'-shiny' if pal == 'shiny' else ''}/{mon}.png')
 # main
 if len(sys.argv) < 2:
 	print('Point to gfx/pokemon dir')
 	sys.exit(1)
+if len(sys.argv) >= 3 and sys.argv[2] == '-crop':
+    # Crop frontsprites
+    crop = True
 dir = sys.argv[1] + '/'
 mons = next(os.walk(dir))[1]
 if not os.path.isdir('sprites'):
