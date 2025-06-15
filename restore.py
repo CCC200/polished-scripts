@@ -4,7 +4,40 @@ from PIL import Image
 dir = ''
 mons = []
 crop = False
+ps = False
 mon_exceptions = ['unown', 'magikarp', 'arbok', 'pikachu', 'pichu', 'dudunsparce']
+
+def get_psname(n):
+    # forme parsing
+    if '_plain' in n:
+        n = n.replace('_plain', '')
+    elif '_galarian' in n:
+        n = n.replace('_galarian', '-galar')
+    elif '_alolan' in n:
+        n = n.replace('_alolan', '-alola')
+    elif '_hisuian' in n:
+        n = n.replace('_hisuian', '-hisui')
+    elif '_paldean' in n:
+        n = n.replace('_paldean', '-paldea')
+    elif '_bloodmoon' in n:
+        n = n.replace('_bloodmoon', '-bloodmoon')
+    elif 'unown' in n:
+        n = n.replace('_', '-')
+    # remove underscore
+    if '_' in n:
+        n = n.replace('_', '')
+    # hardcodes
+    if n == 'arbokjohto':
+        n = 'arbok'
+    if n == 'tauros-paldea':
+        n = 'tauros-paldeacombat'
+    elif 'tauros-paldea' in n:
+        n = n.replace('water', 'aqua').replace('fire', 'blaze')
+    if n == 'dudunsparcetwosegment':
+        n = 'dudunsparce'
+    if n == 'dudunsparcethreesegment':
+        n = 'dudunsparce-threesegment'
+    return n
 
 def make_img(mon, type, pal):
     filepath_pal = dir + mon + f'/{pal}.pal'
@@ -18,8 +51,8 @@ def make_img(mon, type, pal):
         if mon.find(exception) > -1:
             # use standard palette for formes
             filepath_pal = dir + exception + f'/{pal}.pal'
-    if mon == 'gyarados':
-        # special case, see below
+    if mon == 'gyarados' or ps and mon == 'egg':
+        # special cases, see below for gyara
         return
     elif mon.find('gyarados') > -1 and type == 'back':
         # hardcoded backsprite for red & normal gyarados
@@ -58,14 +91,17 @@ def make_img(mon, type, pal):
         if crop and 'front' in type:
             width, height = sprite.size
             sprite = sprite.crop((0, 0, width, height / (height / width)))
-        sprite.save(f'sprites/{type}{'-shiny' if pal == 'shiny' else ''}/{mon}.png')
+        sprite.save(f'sprites/{type}{'-shiny' if pal == 'shiny' else ''}/{get_psname(mon) if ps else mon}.png')
 # main
 if len(sys.argv) < 2:
 	print('Point to gfx/pokemon dir')
 	sys.exit(1)
-if len(sys.argv) >= 3 and sys.argv[2] == '-crop':
+if '-crop' in sys.argv:
     # Crop frontsprites
     crop = True
+if '-ps' in sys.argv:
+    # Showdown name formatting
+    ps = True
 dir = sys.argv[1] + '/'
 mons = next(os.walk(dir))[1]
 if not os.path.isdir('sprites'):
