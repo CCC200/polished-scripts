@@ -32,8 +32,15 @@ for file in sorted(os.listdir(dir)):
     skip_line = False
     statfile = open(dir + file, 'r')
     for line in statfile:
-        #skip 'faithful' data
+        # skip 'faithful' data
         if skip_line:
+            # identify type of dex update
+            if line.find('BST\n') > -1:
+                config.write('\t\t// BST update\n')
+            elif line.find('; type') > -1:
+                config.write('\t\t// Types update\n')
+            elif line.find('abilities_for') > -1:
+                config.write('\t\t// Abilities update\n')
             skip_line = False
             continue
         if line.find('if DEF(FAITHFUL)') > -1:
