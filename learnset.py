@@ -93,7 +93,7 @@ for file in sorted(os.listdir(dir_base)):
     move_name_array.clear()
     move_data_array.clear()
     mon = file.replace('.asm', '')
-    if mon.find('egg') > -1:
+    if mon == 'egg':
         continue
     # separate name for levelup searching
     mon_evo_name = mon

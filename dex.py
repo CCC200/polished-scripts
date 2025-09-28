@@ -5,6 +5,8 @@ config = open('pokedex.ts', 'w')
 config.write('export const Pokedex: {[k: string]: ModdedSpeciesData} = {\n')
 for file in sorted(os.listdir(dir)):
     mon = file.replace('.asm', '')
+    if mon == 'egg':
+        continue
     if mon.find('_plain') > -1:
         mon = mon.replace('_plain', '')
     elif mon.find('_galarian') > -1:
