@@ -57,13 +57,12 @@ def make_img(mon, type, pal):
     elif mon.find('gyarados') > -1 and type == 'back':
         # hardcoded backsprite for red & normal gyarados
         filepath_sprite = dir + 'gyarados/back.png'
-    elif mon == 'ninetales_alolan' or mon == 'vulpix_alolan':
-        if type == 'back':
-            # hardcoded bw swap for vulpix alola line
-            palette = [
-                [255,255,255],
-                [0,0,0],
-            ]
+    elif mon == 'growlithe_hisuian' and type == 'back':
+        # hardcoded bw swap for growlithe hisui
+        palette = [
+            [255,255,255],
+            [0,0,0],
+        ]
     if not os.path.exists(filepath_pal):
         print(f'No {pal} palette for {mon}, skipping')
         return
@@ -94,7 +93,7 @@ def make_img(mon, type, pal):
         sprite.save(f'sprites/{type}{'-shiny' if pal == 'shiny' else ''}/{get_psname(mon) if ps else mon}.png')
 # main
 if len(sys.argv) < 2:
-	print('Point to gfx/pokemon dir')
+	print('Point to polishedcrystal directory')
 	sys.exit(1)
 if '-crop' in sys.argv:
     # Crop frontsprites
@@ -102,7 +101,7 @@ if '-crop' in sys.argv:
 if '-ps' in sys.argv:
     # Showdown name formatting
     ps = True
-dir = sys.argv[1] + '/'
+dir = sys.argv[1] + '/gfx/pokemon/'
 mons = next(os.walk(dir))[1]
 if not os.path.isdir('sprites'):
     os.mkdir('sprites')
