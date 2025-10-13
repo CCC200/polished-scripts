@@ -40,11 +40,11 @@ def get_egg_index(mon):
     except:
         return -1
 
-dir = sys.argv[1] # polishedcrystal/data/pokemon
-dir_base = dir + '/base_stats/'
+dir = sys.argv[1] # polishedcrystal
+dir_base = dir + '/data/pokemon/base_stats/'
 
 # build egg groups
-eggpointers = open(dir + '/egg_move_pointers.asm', 'r')
+eggpointers = open(dir + '/data/pokemon/egg_move_pointers.asm', 'r')
 for line in eggpointers:
     if line.find('NoEggSpeciesMoves') > -1 or line.find('Three Segment Form') > -1 or line.find('Red Form') > -1:
         continue
@@ -122,7 +122,7 @@ for file in sorted(os.listdir(dir_base)):
     # read levelup moves
     search_table = False
     skip_line = False
-    evosfile = open(dir + '/evos_attacks.asm', 'r')
+    evosfile = open(dir + '/data/pokemon/evos_attacks.asm', 'r')
     for line in evosfile:
         # skip 'faithful' moves
         if skip_line:
@@ -164,7 +164,7 @@ for file in sorted(os.listdir(dir_base)):
     basefile.close()
     # read egg moves
     search_table = False
-    eggfile = open(dir + '/egg_moves.asm')
+    eggfile = open(dir + '/data/pokemon/egg_moves.asm')
     for line in eggfile:
         if line.find('EggSpeciesMoves') > -1:
             egg_name = line[:line.find('EggSpeciesMoves')]

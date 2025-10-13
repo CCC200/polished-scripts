@@ -1,7 +1,7 @@
 dexf = open('pokedex.ts')
 dex = dexf.readlines()
 dexf.close()
-basef = open('pokedex-base.ts') # copy this from damage-calc
+basef = open('pokedex-base.ts') # copy this from showdown
 basedex = basef.read()
 basef.close()
 f = open('calc-patch.ts', 'w')

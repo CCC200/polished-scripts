@@ -1,6 +1,6 @@
 import os, sys
 
-dir = sys.argv[1] + '/base_stats/' # polishedcrystal/data/pokemon
+dir = sys.argv[1] + '/data/pokemon/base_stats/' # polishedcrystal
 config = open('pokedex.ts', 'w')
 config.write('export const Pokedex: {[k: string]: ModdedSpeciesData} = {\n')
 for file in sorted(os.listdir(dir)):
