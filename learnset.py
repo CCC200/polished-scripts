@@ -147,7 +147,7 @@ for file in sorted(os.listdir(dir_base)):
             if evo_move[1].find('_') > -1:
                 evo_move[1] = evo_move[1].replace('_', '')
             evo_move[1] = evo_move[1].strip()
-            insert_move(evo_move[1], f'2L{evo_move[0]}', mon)
+            insert_move(evo_move[1], f'9L{evo_move[0]}', mon)
     evosfile.close()
     # read base stats for tm/hm
     basefile = open(dir_base + file, 'r')
@@ -160,7 +160,7 @@ for file in sorted(os.listdir(dir_base)):
                     move = move.replace('_', '')
                 move = move.lower()
                 move = move.strip()
-                insert_move(move, '2M', mon)
+                insert_move(move, '9M', mon)
     basefile.close()
     # read egg moves
     search_table = False
@@ -193,7 +193,7 @@ for file in sorted(os.listdir(dir_base)):
             move = move.replace('_', '')
             move = move.lower()
             move = move.strip()
-            insert_move(move, '2E', mon)
+            insert_move(move, '9E', mon)
     eggfile.close()
     # insert all moves
     for i in range(len(move_name_array)):
