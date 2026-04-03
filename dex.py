@@ -88,6 +88,8 @@ for file in sorted(os.listdir(dir)):
             buf = '\t\tabilities: {'
             for i in range(len(abil)):
                 abil[i] = abil[i].title()
+                if abil[i] == 'Minds Eye':
+                    abil[i] = "Mind's Eye"
                 if i == 0:
                     buf += '0: "' + abil[i] + '"'
                 elif i == 2 or hidden_two:
