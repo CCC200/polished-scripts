@@ -161,6 +161,8 @@ for file in sorted(os.listdir(dir_base)):
                 move = move.lower()
                 move = move.strip()
                 insert_move(move, '9M', mon)
+            # hardcode HP fairy
+            insert_move('hiddenpowerfairy', '9M', mon)
     basefile.close()
     # read egg moves
     search_table = False
