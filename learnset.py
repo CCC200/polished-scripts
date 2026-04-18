@@ -197,6 +197,26 @@ for file in sorted(os.listdir(dir_base)):
             move = move.strip()
             insert_move(move, '9E', mon)
     eggfile.close()
+    # read odd eggs
+    read_moves = False
+    oddeggfile = open(dir + '/data/events/odd_eggs.asm')
+    for line in oddeggfile:
+        if line.find('IS_EGG_MASK') > -1:
+            egg_name = line[4:]
+            egg_name = egg_name[:egg_name.find(',')]
+            egg_name = egg_name.strip().lower().replace('_', '')
+            egg_pointer = get_egg_index(mon)
+            if mon == egg_name or egg_pointer > -1 and egg_name == egg_child_array[egg_pointer]:
+                read_moves = True
+                continue
+        if read_moves:
+            move_list = line[4:].replace(' ', '').replace('_', '').replace('\n', '').lower()
+            move_list = move_list.split(',')
+            for move in move_list:
+                if move != 'nomove':
+                    insert_move(move, '9E', mon)
+            read_moves = False
+    oddeggfile.close()
     # insert all moves
     for i in range(len(move_name_array)):
         config.write(f'\t\t\t{move_name_array[i]}: [{move_data_array[i]}],\n')
