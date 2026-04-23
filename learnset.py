@@ -99,6 +99,11 @@ for file in sorted(os.listdir(dir_base)):
     mon_evo_name = mon
     if mon_evo_name.find('_') > -1:
         mon_evo_name = mon_evo_name.replace('_', '')
+    
+    # Mewtwo exception (unique due to armoured alt-form sharing the same moveset under 'mewtwo' in evo attacks .asm)
+    if 'mewtwo' in mon_evo_name:
+        mon_evo_name = 'mewtwo'
+
     # name formatting
     if mon.find('_plain') > -1:
         mon = mon.replace('_plain', '')
@@ -131,11 +136,13 @@ for file in sorted(os.listdir(dir_base)):
         if line.find('if DEF(FAITHFUL)') > -1:
             skip_line = True
             continue
-        # check if current mons' table
+        # check if current mons' table using exact string matching 
         line = line.lower()
-        if line.find('evos_attacks ' + mon_evo_name) > -1:
+        words = line.split()
+        if words[0] == 'evos_attacks' and words[1] == mon_evo_name:
             search_table = True
             continue
+
         if search_table and line.find('evos_attacks') > -1 or line.find('terminates') > -1:
             break
         # parse move
