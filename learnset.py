@@ -139,7 +139,7 @@ for file in sorted(os.listdir(dir_base)):
         # check if current mons' table using exact string matching 
         line = line.lower()
         words = line.split()
-        if words[0] == 'evos_attacks' and words[1] == mon_evo_name:
+        if len(words) >= 2 and words[0] == 'evos_attacks' and words[1] == mon_evo_name:
             search_table = True
             continue
 
