@@ -5,8 +5,9 @@ move_data_array = []
 egg_parent_array = []
 egg_child_array = []
 movelist = []
+unique_moves = []
 
-def insert_move(move, data, mon):
+def move_cleanup(move, mon):
     if move == 'rocksmash':
         move = 'brickbreak'
     elif move == 'furystrikes':
@@ -24,14 +25,26 @@ def insert_move(move, data, mon):
         move = 'dazzlinggleam'
     elif move == 'disarmvoice':
         move = 'disarmingvoice'
+    return move
+
+def insert_move(move, data, mon):
+    move = move_cleanup(move, mon)
     try:
         index = move_name_array.index(move)
+        if data in move_data_array[index]:
+            return
         move_data_array[index] = move_data_array[index] + f', "{data}"'
     except:
         move_name_array.append(move)
         move_data_array.append(f'"{data}"')
         if move not in movelist:
             movelist.append(move)
+
+def insert_unique_move(move, mon):
+    move = move_cleanup(move, mon)
+    level = '25' if mon == 'lapras' else '5' # lapras event hardcode
+    insert_move(move, f'9L{level}', mon)
+    unique_moves.append(move)
 
 def get_egg_index(mon):
     try:
@@ -89,6 +102,8 @@ eggpointers.close()
 # build learnsets
 config = open('learnsets.ts', 'w')
 config.write('export const Learnsets: {[k: string]: ModdedLearnsetData} = {\n')
+unique = open('unique-moves.ts', 'w')
+unique.write('export default [\n')
 for file in sorted(os.listdir(dir_base)):
     move_name_array.clear()
     move_data_array.clear()
@@ -224,12 +239,38 @@ for file in sorted(os.listdir(dir_base)):
                     insert_move(move, '9E', mon)
             read_moves = False
     oddeggfile.close()
+    # read unique wild moves
+    unique_moves = []
+    read_moves = False
+    uniquemovefile = open(dir + '/data/pokemon/unique_wild_moves.asm')
+    for line in uniquemovefile:
+        if line.startswith('UniqueWildMoves:'):
+            read_moves = True
+            continue
+        if read_moves and 'unique_moves' in line and '0' not in line:
+            split = line.split(',')
+            move_index = 2
+            if 'YELLOW_FOREST' in line: # pikachu exception
+                move_index = 3
+            unique_mon_name = split[1].strip().lower().replace('_', '').replace(' ', '')
+            if unique_mon_name == mon:
+                unique_move_name = split[move_index].strip().lower().replace('_', '').replace(' ', '')
+                unique_move_name = unique_move_name[:unique_move_name.find(';')]
+                insert_unique_move(unique_move_name, mon)
+    uniquemovefile.close()
     # insert all moves
     for i in range(len(move_name_array)):
         config.write(f'\t\t\t{move_name_array[i]}: [{move_data_array[i]}],\n')
     config.write('\t\t},\n\t},\n')
+    if len(unique_moves) > 0:
+        unique.write('\t{\n\t\t"name": ' + f'"{mon}",\n\t\t"moves": [\n')
+        for move in unique_moves:
+            unique.write(f'\t\t\t"{move}",\n')
+        unique.write('\t\t],\n\t},\n')
 config.write('};\n')
 config.close()
+unique.write('];\n')
+unique.close()
 
 movefile = open('moves.ts', 'w')
 for move in movelist:
