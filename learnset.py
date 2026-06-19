@@ -42,7 +42,7 @@ def insert_move(move, data, mon):
 
 def insert_unique_move(move, mon):
     move = move_cleanup(move, mon)
-    level = '25' if mon == 'lapras' else '5' # lapras event hardcode
+    level = '25' if mon == 'lapras' else '1' # lapras event hardcode
     insert_move(move, f'9L{level}', mon)
     unique_moves.append(move)
 
